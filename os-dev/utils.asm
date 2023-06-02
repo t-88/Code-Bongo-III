@@ -115,4 +115,3 @@ popa
 ret
 
 diskErrorMsg db "[Error] Reading Disk Failed", 0
-abc db "abc", 0

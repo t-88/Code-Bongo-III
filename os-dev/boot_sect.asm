@@ -1,10 +1,18 @@
 [bits 16]
 [org 0x7c00]
 
+KERNAL_OFFSET equ 0x1000
+
 ; clear screen
 mov ah,  0
 mov al , 3
 int 0x10
+
+
+load_kernal:
+    mov bx , KERNAL_OFFSET
+    mov dh , 15
+    call read_disk
 
 cli
 lgdt [gdt_descriptor]
@@ -51,6 +59,7 @@ gdt_start:
     DATA_SEG equ gdt_data - gdt_start
 
 %include "utils_pm.asm"
+%include "utils.asm"
 
 [bits 32]
 init_pm:
@@ -64,8 +73,10 @@ init_pm:
     mov ebp , 0x90000
     mov esp , ebp
 
-    mov ebx , hello_32bit
-    call print_string_pm 
+    ; mov ebx , hello_32bit
+    ; call print_string_pm 
+
+    call KERNAL_OFFSET
 
 
     jmp $
