@@ -1,17 +1,27 @@
-org 0x7c00 
+[bits 16]
+[org 0x7c00]
 
-mov ah,  0x00
-mov al , 0x13
+; clear screen
+mov ah,  0
+mov al , 3
 int 0x10
 
-mov bx , msg
-call print_string
+
+mov dh , 2
+mov bx , 0x9000  
+call read_disk
+
+mov bx , [0x9000 + 512] 
+call print_hex
+
+
 jmp $
 
 %include "utils.asm"   
 
 
-msg db "May The Fun Begin!!", 0
+times 510-($-$$) db 0
+d dw 0xaa55 ; magic number
 
-times 510 - ($ - $$) db 0
-dw 0xaa55 ; magic number
+times 256 dw 0xdada
+times 256 dw 0xface
