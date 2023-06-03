@@ -1,4 +1,5 @@
-import Parser from "./parser.ts";
+import Parser from "./frontend/parser.ts";
+import { evaluate } from "./runtime/interperter.ts";
 
 
 function Repl() {
@@ -11,7 +12,7 @@ function Repl() {
         }
 
         const program = parser.make_ast(input);
-        console.log(program);
+        console.log(evaluate(program));
     }
 }
 

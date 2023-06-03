@@ -4,6 +4,7 @@
 
 export enum TokenType {
     Let,
+    Null,
     Identifier,
     Equal,
     Number,
@@ -19,6 +20,7 @@ export interface Token {
 
 const KEYWORDS = {
     "let" : TokenType.Let,
+    "null" : TokenType.Null,
 };  
 
 export function isAlpha(src : string) : boolean {
@@ -42,7 +44,7 @@ export function tokenize(source : string) : Token[] {
     
     while(src.length > 0) {
         let c : string = src.shift() as string;  
-        if(c == "+" || c == "-" || c == "*" || c == "/") {
+        if(c == "+" || c == "-" || c == "*" || c == "/" || c == "%") {
             tokens.push(token(TokenType.BinaryOp,c))
         } else if(c == "(") {
             tokens.push(token(TokenType.Oparen,c))

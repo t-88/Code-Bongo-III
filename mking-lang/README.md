@@ -3,3 +3,10 @@
 -   [ast-Explorer] (https://astexplorer.net/)
 -   trying to learn parsing and lexers??
 -   recrusive desent parser is LL parser :} 
+
+
+## Run
+Deno is Required to Run it
+```bash
+    $ deno run main.ts
+```
