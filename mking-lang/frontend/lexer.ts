@@ -8,7 +8,9 @@ export enum TokenType {
     Identifier,
     Equal,
     Number,
+    Bool,
     BinaryOp,
+    LogicalOp,
     Oparen,
     Cparen,
     EOF,
@@ -21,6 +23,8 @@ export interface Token {
 const KEYWORDS = {
     "let" : TokenType.Let,
     "null" : TokenType.Null,
+    "true" : TokenType.Bool,
+    "false" : TokenType.Bool,
 };  
 
 export function isAlpha(src : string) : boolean {
@@ -46,6 +50,9 @@ export function tokenize(source : string) : Token[] {
         let c : string = src.shift() as string;  
         if(c == "+" || c == "-" || c == "*" || c == "/" || c == "%") {
             tokens.push(token(TokenType.BinaryOp,c))
+        }
+        else if(c == "&" || c == "|") {
+            tokens.push(token(TokenType.LogicalOp,c));
         } else if(c == "(") {
             tokens.push(token(TokenType.Oparen,c))
         } else if(c == ")") {
