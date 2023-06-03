@@ -1,0 +1,3 @@
+-   i can use regex to make tokenizing faster.
+-   parser is the most fun to make and the hardest.
+-   i am building a recrusive desent lexer.

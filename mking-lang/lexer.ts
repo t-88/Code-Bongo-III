@@ -10,6 +10,7 @@ export enum TokenType {
     BinaryOp,
     Oparen,
     Cparen,
+    EOF,
 }
 export interface Token {
     value : string;
@@ -64,11 +65,14 @@ export function tokenize(source : string) : Token[] {
                 type = KEYWORDS[str];
             }
             tokens.push(token(type,str))
-        } else {
-            console.log("unkown char",c);
+        }
+        else if(isSkipable(c)) {}
+        else {
+            console.error("[Error] unkown char in tokenize()",c);
+            Deno.exit(1);
         }
     }
+
+    tokens.push(token(TokenType.EOF,"eof"));
     return tokens;
 }
-
-console.log(tokenize("let x = (15 + 3) \n asd"));
