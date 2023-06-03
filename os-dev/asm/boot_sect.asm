@@ -58,8 +58,8 @@ gdt_start:
     CODE_SEG equ gdt_code - gdt_start
     DATA_SEG equ gdt_data - gdt_start
 
-%include "utils_pm.asm"
-%include "utils.asm"
+%include "asm/utils_pm.asm"
+%include "asm/utils.asm"
 
 [bits 32]
 init_pm:
@@ -73,15 +73,11 @@ init_pm:
     mov ebp , 0x90000
     mov esp , ebp
 
-    ; mov ebx , hello_32bit
-    ; call print_string_pm 
 
     call KERNAL_OFFSET
 
 
     jmp $
-
-hello_32bit db "hello 32 bit mode",0
 
 times 510-($-$$) db 0
 d dw 0xaa55 ; magic number
