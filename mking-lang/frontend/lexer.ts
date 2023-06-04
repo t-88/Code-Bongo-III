@@ -14,6 +14,7 @@ export enum TokenType {
     Oparen,
     Cparen,
     EOF,
+    SemiColon,
 }
 export interface Token {
     value : string;
@@ -59,6 +60,9 @@ export function tokenize(source : string) : Token[] {
             tokens.push(token(TokenType.Cparen,c))
         } else if(c == "=") {
             tokens.push(token(TokenType.Equal,c))
+        }
+        else if(c == ";") {
+            tokens.push(token(TokenType.SemiColon,c))
         } else if(isNumeric(c)) {
             let str : string = c;
             while(src.length > 0 && isNumeric(src[0]))

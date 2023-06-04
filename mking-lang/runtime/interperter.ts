@@ -1,5 +1,5 @@
 import { RunTimeVal ,  ValueType , NullVal , NumberVal, MK_NUMBER, MK_NULL, MK_BOOL, BoolVal } from "./value.ts";
-import { BinaryExpr, BoolExpr, BoolLiteral, Identifier, NodeType, NumericLiteral, Program, Stmt, VarDeclaration } from "../frontend/ast.ts";
+import { BinaryExpr, BoolExpr, BoolLiteral, Identifier, NodeType, NumericLiteral, Program, Stmt, VarAssingment, VarDeclaration } from "../frontend/ast.ts";
 import Environment from "./environment.ts";
 
 export function evaluate_bin_expr(node : BinaryExpr, env : Environment): RunTimeVal {
@@ -83,9 +83,21 @@ export function evaluate_identifier(node : Identifier,env : Environment) : RunTi
     return env.get_var(node.value) as RunTimeVal;
 }
 export function evaluate_var_declaration(node : VarDeclaration,env : Environment) : RunTimeVal {
-    env.declare_var(node.name,evaluate(node.value,env));
+    if(node.value != undefined) {
+         env.declare_var(node.name,evaluate(node.value,env));
+    } else {
+        env.declare_var(node.name,MK_NULL());
+    }
     return node;  
 }
+
+export function evaluate_var_assingment(node : VarAssingment,env : Environment) : RunTimeVal {
+    env.assigne_var(node.name,evaluate(node.value));
+    return node;
+}
+
+
+
 export function evaluate(node : Stmt,env : Environment): RunTimeVal {
     switch(node.type) {
         case "NumericLiteral":
@@ -98,15 +110,15 @@ export function evaluate(node : Stmt,env : Environment): RunTimeVal {
             return evaluate_bin_expr(node as BinaryExpr,env);
         case "BoolExpr":
             return evaluate_bool_expr(node as BoolExpr,env);
-        
-            case "Program":
-            
+        case "Program":
             return evaluate_program(node as Program,env);
         case "Identifier":
             return evaluate_identifier(node as Identifier,env);
         case "VarDeclaration":
-            return evaluate_var_declaration(node as Identifier,env);
-        
+            return evaluate_var_declaration(node as VarDeclaration,env);
+        case "VarAssingment":
+            return evaluate_var_assingment(node as VarAssingment,env);
+            
         default:
             console.error(`[Error] Unreachable, node not implemented ${node.type}`);
             Deno.exit(1);

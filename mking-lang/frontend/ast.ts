@@ -5,6 +5,7 @@ export type NodeType =
                     "NullLiteral"|
                     "Identifier"|
                     "VarDeclaration"|
+                    "VarAssingment"|
                     "BoolLiteral"
 
 export interface Stmt {
@@ -42,8 +43,13 @@ export interface NullLiteral extends Expr {
     value : "null",
 }
 
-export interface VarDeclaration extends Expr {
+export interface VarDeclaration extends Stmt {
     type : "VarDeclaration",
+    name  : string,
+    value? : Expr,
+}
+export interface VarAssingment extends Stmt {
+    type : "VarAssingment",
     name  : string,
     value : Expr,
 }

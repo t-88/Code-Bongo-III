@@ -1,5 +1,5 @@
 import { Token, tokenize , TokenType } from "./lexer.ts";
-import { NodeType, BinaryExpr ,Identifier ,Program , NumericLiteral , Expr , Stmt, NullLiteral, VarDeclaration, BoolLiteral, BoolExpr } from "./ast.ts";
+import { NodeType, BinaryExpr ,Identifier ,Program , NumericLiteral , Expr , Stmt, NullLiteral, VarDeclaration,VarAssingment, BoolLiteral, BoolExpr } from "./ast.ts";
 import {MK_NULL, MK_NUMBER} from "../runtime/value.ts"
 
 
@@ -31,7 +31,6 @@ export default class Parser {
             program.body.push(this.parse_stmt())
         }
 
-        
         return program;
     }
 
@@ -42,12 +41,14 @@ export default class Parser {
         // while loops 
         
         // skip to parse expretion
-        
-        return this.parse_expr();
+        switch(this.at().type) {
+            case TokenType.Let: return this.parse_var_declaration();
+            default: return this.parse_expr();
+        }
     }
 
     private parse_expr() : Expr {
-        return this.parse_var_declaration();
+        return this.parse_additive_expr();
     }
 
     private parse_logical_expr() : Expr {
@@ -65,22 +66,37 @@ export default class Parser {
 
         return lhs;
     }
-    private parse_var_declaration() : Expr {
-        if(this.at().type == TokenType.Let) {
+    private parse_var_declaration() : Stmt {
+        // let x;
+        // let x = 5;
+        let value;
+        this.eat();
+        let name = this.eat().value; 
+        if(this.at().type == TokenType.SemiColon) {
             this.eat();
-            let name = this.eat().value; 
+        } else {
             this.expect(TokenType.Equal,`[Error] Expexted '=' for var declaration`);
-            let value = this.parse_additive_expr(); 
-            
+            value = this.parse_additive_expr();
+            this.expect(TokenType.SemiColon,`[Error] Expexted ';' for var declaration end`);
+        }
+        
+        return {
+            type : "VarDeclaration",
+            value,
+            name,
+        } as VarDeclaration;
+    }
+
+    private parse_var_assignment(name : string) : Stmt {
+        // a = 2;
+        this.eat();
+        const value = this.parse_additive_expr();
+        this.expect(TokenType.SemiColon,`[Error] Expexted ';' for var assignment end`);
             return {
-                type : "VarDeclaration",
+                type : "VarAssingment",
                 value,
                 name,
-            } as VarDeclaration;
-        }
-
-        return this.parse_logical_expr();
-
+            } as VarAssingment;
     }
     private parse_additive_expr(): Expr {
         let lhs  = this.parse_multiplicative_expr();
@@ -119,7 +135,11 @@ export default class Parser {
         let tknType = this.at().type;
         switch(tknType) {
             case TokenType.Identifier:
-                return {type : "Identifier" , value : this.eat().value} as Identifier;
+                let tkn = this.eat();
+                if(this.at().type == TokenType.Equal) {
+                    return this.parse_var_assignment(tkn.value);
+                } 
+                return {type : "Identifier" , value : tkn.value} as Identifier;
             case TokenType.Null:
                 this.eat();
                 return MK_NULL();
