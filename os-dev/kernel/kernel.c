@@ -1,10 +1,10 @@
 #include "low_lvl.h"
 #include "../drivers/screen.h"
 
-#include <stdint.h>
 
 
 void main() {
-    print("Fuck This Shit, Thats PAINFULL\n");
-
+    cls();
+    print("Good Bay\n");
+    print("Doors Are Open Now!!\n");
 }

@@ -81,6 +81,17 @@ void print_str(char* str, int row, int col, char attrib) {
         i++;
     }  
 }
+
+void cls() {
+    set_cursor_rc(0,0);
+    uint8_t* video =  (uint8_t*)VIDEO_ADDR;
+    for(int x = 0 ; x < MAX_ROWS * 4; x++) {
+        for(int y = 0 ; y < MAX_COLS * 4; y++) {
+            video[get_cell_pos(x,y)] = ' ';
+        }
+    }
+}
+
 void print(char* str) { 
     print_str( str, -1, -1, 0);
 }

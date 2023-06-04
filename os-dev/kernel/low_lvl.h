@@ -30,4 +30,5 @@ void port_word_out(unsigned char port, unsigned short data) {
     __asm__("out %%ax, %%dx" :  "=a" (data) : "d" (port));
 }
 
+
 #endif // LOW_LVL_H_
