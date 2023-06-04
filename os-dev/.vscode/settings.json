@@ -1,9 +1,6 @@
 {
     "files.associations": {
         "screen.h": "c",
-        "low_lvl.h": "c",
-        "stdint.h": "c",
-        "stdint-gcc.h": "c",
-        "idt.h": "c"
+        "low_lvl.h": "c"
     }
 }

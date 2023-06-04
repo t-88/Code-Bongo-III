@@ -3,6 +3,11 @@
 
 KERNAL_OFFSET equ 0x1000
 
+; clear screen
+mov ah,  0
+mov al , 3
+int 0x10
+
 
 load_kernal:
     mov bx , KERNAL_OFFSET
