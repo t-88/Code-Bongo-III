@@ -7,6 +7,7 @@ LANG_TOKENS = {
     "-": "TOKEN_SUB",
     "*": "TOKEN_MULT",
     "/": "TOKEN_DIV",
+    ",": "TOKEN_COMMA",
     ";": "TOKEN_SIM_COLON",
     "IDENT": "TOKEN_IDENTIFIER",
     "NUM":   "TOKEN_NUMBER",

@@ -17,10 +17,21 @@ class Parser:
         self.curr += 1
         return tmp
     
-    def expect(self,expected):
-        if self.eots() or self.tokens[self.curr].kind != expected:
-            print(f"[Error] Expected {expected} got {self.tokens[self.curr].kind} {self.tokens[self.curr].col}")
+    def expect(self,*expected):
+        if self.eots():
+            print(f"[ERROR] Expected {expected} got {self.tokens[self.curr].kind} {self.tokens[self.curr].col}")
             assert False
+        
+        notFound = True
+        for exp in expected: 
+            if self.tokens[self.curr].kind == exp:
+                notFound = False
+                break
+        if notFound:
+            print(f"[ERROR] Expected {expected} got {self.tokens[self.curr].kind} {self.tokens[self.curr].col}")
+            assert False
+
+        
         tmp = self.tokens[self.curr]
         self.curr += 1
         return tmp
@@ -45,11 +56,12 @@ class Parser:
         return program    
     def parse_assignment(self):
         expr = self.parse_comparasion()
-        if not self.eots() and self.at().kind == "TOKEN_ASSIGN":
+        if not self.eots() and self.at().kind == "TOKEN_ASSIGN" :
             self.next()
             rhs = self.parse_assignment()
-            self.expect("TOKEN_SIM_COLON")
+            self.expect("TOKEN_SIM_COLON","TOKEN_COMMA")
             return Assignement(expr,rhs)
+
         return expr
     def parse_comparasion(self):
         expr = self.parse_additive()
