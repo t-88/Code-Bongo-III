@@ -1,4 +1,4 @@
-tokens = {
+LANG_TOKENS = {
     "<-": "TOKEN_ASSIGN",
     "<": "TOKEN_LESS",
     ">": "TOKEN_LESS",
@@ -7,19 +7,22 @@ tokens = {
     "-": "TOKEN_SUB",
     "*": "TOKEN_MULT",
     "/": "TOKEN_DIV",
+    ";": "TOKEN_SIM_COLON",
     "IDENT": "TOKEN_IDENTIFIER",
-    "NUM": "TOKEN_NUMBER",
-    "RES" : "TOKEN_RESERVED"
+    "NUM":   "TOKEN_NUMBER",
+    "RES" :  "TOKEN_RESERVED",
+    "eof" :  "TOKEN_EOF"
 } 
-reseverKeyWords = [
+LANG_KEYWORDS = [
     "whats",
 ]
 
 skipable = [" ","\t","\n","\r"]
 
 class Token:
-    def __init__(self,kind,value=""):
+    def __init__(self,col,kind,value=""):
         self.kind = kind
         self.value = value
+        self.col = col
     
 
