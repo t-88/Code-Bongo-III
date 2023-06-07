@@ -51,7 +51,8 @@ class Parser:
         while(not self.eots()):
             try:
                 program.body.append(self.parse_assignment())
-            except: 
+                self.expect("TOKEN_SIM_COLON")
+            except Exception as exp: 
                 self.errorFlag = True
         return program    
     def parse_assignment(self):
@@ -64,32 +65,56 @@ class Parser:
 
         return expr
     def parse_comparasion(self):
-        expr = self.parse_additive()
+        expr = self.parse_turnary()
         while not self.eots() and self.at().kind == "TOKEN_GIVES?":
             op = self.next().value
-            rhs = self.parse_additive()
+            rhs = self.parse_turnary()
             expr =  BooleanOp(expr,rhs,op)
+        return expr    
+    def parse_turnary(self):
+        expr = self.parse_additive()
+        if not self.eots() and self.at().kind == "TOKEN_COLON":
+            self.next()
+            lhs = self.parse_turnary()
+            self.expect("TOKEN_Q_MARK")
+            rhs = self.parse_turnary()
+            expr = Ternary(expr,lhs,rhs)
         return expr
+
     def parse_additive(self):
         expr = self.parse_multiplicative()
         while not self.eots() and (self.at().kind == "TOKEN_ADD" or self.at().kind == "TOKEN_SUB"):
             op = self.next().value
-            rhs = self.parse_multiplicative()
+            rhs = self.parse_additive()
             expr =  BinaryOp(expr,rhs,op)
+        
         return expr
     def parse_multiplicative(self):
-        expr = self.parse_primary()
+        expr = self.parse_unary()
         while not self.eots() and (self.at().value == "*" or self.at().value == "/"):
             op = self.next().value
-            rhs = self.parse_primary()
+            rhs = self.parse_unary()
             expr =  BinaryOp(expr,rhs,op)
         return expr
+    def parse_unary(self):
+        if self.at().value == "!":
+            op = self.next().value
+            rhs = self.parse_unary()
+            return UnaryOp(rhs,op)
+        return self.parse_primary()
+
     def parse_primary(self):
         token = self.next()
         if token.kind == "TOKEN_NUMBER":
-            return NumberLiteral(token.value)
+            return NumberLiteral(int(token.value))
         elif token.kind == "TOKEN_IDENTIFIER":
             return Identifier(token.value,None)
+        elif token.kind == "TOKEN_OPARA":
+            body = self.parse_comparasion()
+            self.expect("TOKEN_CPARA")
+            return body
+
+
         else:
             print(f"[ERROR] Unexpected Token {token.kind} {token.col}")
             assert False    

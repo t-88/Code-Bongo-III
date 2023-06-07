@@ -60,6 +60,6 @@ class Lexer:
                     self.col += 1
             else:
                 self.errorFlag = True
-                print(f"[Error] Unkown char in col {self.col} '{char}' ")
+                print(f"[Error Lexer] Unkown char in col {self.col} '{char}' ")
         self.srcTokens.append(Token(self.col,LANG_TOKENS["eof"]))
         return self.srcTokens

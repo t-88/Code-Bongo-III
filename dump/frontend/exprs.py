@@ -20,7 +20,11 @@ class BinaryOp(Expr):
         self.lhs = lhs
         self.rhs = rhs
         self.op = op
-
+class UnaryOp(Expr):
+    def __init__(self,rhs,op,kind = "UnaryOp"):
+        super().__init__(kind)
+        self.rhs = rhs
+        self.op = op
 class BooleanOp(Expr):
     def __init__(self,lhs,rhs,op,kind="BooleanOp"):
         super().__init__(kind)
@@ -49,9 +53,15 @@ class StringLiteral(Stmt):
         super().__init__(kind)
         self.value = value   
 class Identifier(Stmt):
-    def __init__(self,name
-                 ,value,kind="Identifier",**kwds):
+    def __init__(self,name,value,kind="Identifier",**kwds):
         super().__init__(kind)
         self.value = value                
         self.name = name                
+
+class Ternary(Expr):
+    def __init__(self,cond,lhs,rhs,kind="Ternary",**kwds):
+        super().__init__(kind)
+        self.cond = cond
+        self.lhs = lhs
+        self.rhs = rhs
 

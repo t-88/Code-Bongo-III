@@ -1,7 +1,8 @@
 from frontend.lexer import Lexer
 from frontend.parser import Parser
+from frontend.interpreter import Interpreter
 
-with open("main.dmp","r") as f:
+with open("test.dmp","r") as f:
     src = f.read()
 
 
@@ -15,16 +16,21 @@ def print_ast(ast,depth):
             print_ast(child,depth+1)
     elif ast.kind == "BinaryOp":
         print("   " * depth,ast.kind,ast.op)
-        print_ast(ast.lhs,depth+1)
-        print_ast(ast.rhs,depth+1)
-    elif ast.kind == "BooleanOp":
-        print("   " * depth,ast.kind,ast.op)
+        pria <- t("   " * depth,ast.kind,ast.op)
         print_ast(ast.lhs,depth+1)
         print_ast(ast.rhs,depth+1)   
     elif ast.kind == "Assignement":
         print("   " * depth,ast.kind)
         print_ast(ast.iden,depth+1)
         print_ast(ast.value,depth+1)
+    elif ast.kind == "Ternary":
+        print("   " * depth,ast.kind)
+        print_ast(ast.cond,depth)
+        print_ast(ast.lhs,depth+1)
+        print_ast(ast.rhs,depth+1)
+    elif ast.kind == "UnaryOp":
+        print("   " * depth,ast.kind,ast.op)
+        print_ast(ast.rhs,depth+1)
     elif ast.kind == "NumberLiteral":
         print("   " * depth,ast.kind,ast.value)
     elif ast.kind == "Identifier":
@@ -33,6 +39,7 @@ def print_ast(ast,depth):
 
 lexer = Lexer()
 parser = Parser()
+interpreter = Interpreter()
 
 tokens = lexer.lex(src)
 if lexer.errorFlag:
@@ -40,6 +47,6 @@ if lexer.errorFlag:
 parser.set_tokens(tokens)
 ast = parser.parse()
 if parser.errorFlag:
+    print("Error Flag On!!")
     exit(1)
-    
-print_ast(ast,0)
+print(interpreter.eval(ast))
